@@ -7,6 +7,7 @@ class PluginManager:
         self.test = config.get("test_val")
         logging.info("LOADING PLUGIN MANAGER")
         self.STAM = screws_tilt_adjust_mesh.ScrewsTiltAdjustMesh(config)
+        self.printer.add_object(self.STAM)
 
 def load_config(config):
     return PluginManager(config)
