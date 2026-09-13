@@ -58,7 +58,10 @@ class ScrewsTiltAdjustMesh:
     cmd_STAM__PROCESS_MESH_help = "TODO"
     def cmd_STAM__PROCESS_MESH(self, gcmd):
         profile = gcmd.get('PROFILE', "STAM_mesh")
+        self.gcode.respond_info(f"LOADING : {profile}")
         z_mesh = self.get_z_mesh(profile)
+        if z_mesh is None:
+            self.gcode.error("bad mesh read")
         self.process_mesh(z_mesh)
 
 
