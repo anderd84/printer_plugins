@@ -23,3 +23,6 @@ class ScrewsTiltAdjustMesh:
                                        "of turns to level it."
     def cmd_SCREWS_TILT_ADJUST_MESH(self, gcmd):
         self.gcode.respond("Running custom gcode")
+
+def load_config(config):
+    return ScrewsTiltAdjustMesh(config)
