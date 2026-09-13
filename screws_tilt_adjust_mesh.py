@@ -36,12 +36,44 @@ class ScrewsTiltAdjustMesh:
         z_mesh.print_mesh(self.gcode.respond_info)
         meshed_mat = z_mesh.get_mesh_matrix()
 
+        x2_sum = 0
+        y2_sum = 0
+        xz_sum = 0
+        yz_sum = 0
+        xy_sum = 0
+        x_sum = 0
+        y_sum = 0
+        z_sum = 0
+        n = 0
         for y_ndx, y_line in enumerate(meshed_mat):
             logging.info(y_line)
             y_coord = z_mesh.get_y_coordinate(y_ndx)
             for x_ndx, z_coord in enumerate(y_line):
                 x_coord = z_mesh.get_x_coordinate(x_ndx)
                 logging.info(f"x: {x_coord}, y: {y_coord}, z: {z_coord}")
+
+                x2_sum += x_coord**2
+                y2_sum += y_coord**2
+                xz_sum += x_coord * z_coord
+                yz_sum += y_coord * z_coord
+                xy_sum += x_coord * y_coord
+                x_sum += x_coord
+                y_sum += y_coord
+                z_sum += z_coord
+                n += 1
+
+        x2_regSum = x2_sum - (x_sum*x_sum/n)
+        y2_regSum = y2_sum - (y_sum*y_sum/n)
+        xz_regSum = xz_sum - (x_sum*z_sum/n)
+        yz_regSum = yz_sum - (y_sum*z_sum/n)
+        xy_regSum = xy_sum - (x_sum*y_sum/n)
+
+        denom = (x2_regSum*y2_regSum - xy_regSum*xy_regSum)
+        kx = (y2_regSum*xz_regSum - xy_regSum*yz_regSum)/denom
+        ky = (x2_regSum*yz_regSum - xy_regSum*xz_regSum)/denom
+
+        b = (z_sum - kx*x_sum - ky*y_sum)/n
+        self.gcode.respond_info(f"plane is approx: z = {kx}*x + {ky}*y + {b}")
 
 # ==========================================================================================
     cmd_SCREWS_TILT_ADJUST_MESH_help = "Tool to help adjust bed leveling " \
