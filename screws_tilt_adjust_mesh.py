@@ -29,7 +29,7 @@ class ScrewsTiltAdjustMesh:
                                        "of turns to level it."
     def cmd_SCREWS_TILT_ADJUST_MESH(self, gcmd):
         self.gcode.respond_info("Running custom gcode")
-        self.gcode.run_script("BED_MESH_CALIBRATE")
+        self.gcode.run_script_from_command("BED_MESH_CALIBRATE")
 
 
 def load_config(config):
