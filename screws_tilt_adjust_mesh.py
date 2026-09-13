@@ -1,10 +1,10 @@
-# from bed_mesh import BedMesh
-# from screws_tilt_adjust import ScrewsTiltAdjust
+from extras.bed_mesh import BedMesh
+from extras.screws_tilt_adjust import ScrewsTiltAdjust
 import logging
 
 class ScrewsTiltAdjustMesh:
-    # bedMesh : BedMesh
-    # screwTiltAdjust : ScrewsTiltAdjust
+    bedMesh : BedMesh
+    screwTiltAdjust : ScrewsTiltAdjust
     gcode : object
     printer : object
     adjust_mesh_val : int

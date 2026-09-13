@@ -5,15 +5,14 @@ class PluginManager:
         self.printer = config.get_printer()
         self.plugin_name = config.get_name().split()[1]
 
-        logging.info("[PRINTER PLUGIN MANAGER]\n")
-        logging.info("Plugin : %s\n" % (self.plugin_name,))
+        logging.info("========= [PRINTER PLUGIN MANAGER] =========\n")
+        logging.info("Plugin : %s" % (self.plugin_name,))
 
         py_name = os.path.join(os.path.dirname(__file__), self.plugin_name + '.py')
         if not os.path.exists(py_name):
             raise self.config_error("Unable to load module '%s' (doesn't exist)" % (py_name,))
 
-        logging.info("package: %s" % (__package__,))
-        mod = importlib.import_module(__package__ + "." + self.plugin_name, package=__package__)
+        mod = importlib.import_module(f"{__package__}.{self.plugin_name}", package=__package__)
 
         init_func = 'load_config'
         init_func = getattr(mod, init_func, None)
@@ -23,7 +22,8 @@ class PluginManager:
 
         self.plugin = init_func(config)
 
-        logging.info("[PRINTER PLUGIN MANAGER]")
+        logging.info("Plugin Load Success!")
+        logging.info("\n========= [PRINTER PLUGIN MANAGER] =========")
 
 def load_config_prefix(config):
     return PluginManager(config)
