@@ -7,12 +7,12 @@ class ScrewsTiltAdjustMesh:
     screwTiltAdjust : ScrewsTiltAdjust
     gcode : object
     printer : object
-    test_val : int
+    adjust_mesh_val : int
 
     def __init__(self, config):
         logging.info("LOADING STAM plugin")
         self.printer = config.get_printer()
-        self.test_val = config.getint("adjust_mesh_val")
+        self.adjust_mesh_val = config.getint("adjust_mesh_val")
         self.gcode = self.printer.lookup_object('gcode')
         self.gcode.register_command("SCREWS_TILT_ADJUST_MESH",
                                     self.cmd_SCREWS_TILT_ADJUST_MESH,
