@@ -6,7 +6,6 @@ class PluginManager:
         self.plugin_name = config.get_name().split()[1]
 
         logging.info(f"========= [PRINTER PLUGIN MANAGER ({self.plugin_name})] =========")
-        # logging.info("Plugin : %s" % (self.plugin_name,))
 
         py_name = os.path.join(os.path.dirname(__file__), self.plugin_name + '.py')
         if not os.path.exists(py_name):
