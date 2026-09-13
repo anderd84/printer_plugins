@@ -1,4 +1,4 @@
-from extras.bed_mesh import BedMesh
+from extras.bed_mesh import BedMesh, ZMesh
 from extras.screws_tilt_adjust import ScrewsTiltAdjust
 from gcode import GCodeDispatch
 import logging
@@ -29,7 +29,12 @@ class ScrewsTiltAdjustMesh:
                                        "of turns to level it."
     def cmd_SCREWS_TILT_ADJUST_MESH(self, gcmd):
         self.gcode.respond_info("Running custom gcode")
-        self.gcode.run_script_from_command("BED_MESH_CALIBRATE")
+
+        self.gcode.run_script_from_command("BED_MESH_CALIBRATE PROFILE=STAM_mesh")
+        self.gcode.run_script_from_command("BED_MESH_PROFILE LOAD=STAM_mesh")
+
+        z_mesh: ZMesh = self.bed_mesh.get_mesh()
+        z_mesh.print_mesh()
 
 
 def load_config(config):
