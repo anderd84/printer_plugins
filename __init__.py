@@ -1,10 +1,8 @@
-from . import screws_tilt_adjust_mesh
 import importlib, logging, os
 
 class PluginManager:
     def __init__(self, config):
         self.printer = config.get_printer()
-        self.plugin_val = config.get("plugin_val")
         self.plugin_name = config.get_name().split()[1]
 
         logging.info("[PRINTER PLUGIN MANAGER]\n")
@@ -14,7 +12,7 @@ class PluginManager:
         if not os.path.exists(py_name):
             raise self.config_error("Unable to load module '%s' (doesn't exist)" % (py_name,))
         
-        mod = importlib.import_module(self.plugin_name)
+        mod = importlib.import_module(self.plugin_name, ".")
 
         init_func = 'load_config'
         init_func = getattr(mod, init_func, None)
