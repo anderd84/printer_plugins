@@ -34,7 +34,7 @@ class ScrewsTiltAdjustMesh:
         self.gcode.run_script_from_command("BED_MESH_PROFILE LOAD=STAM_mesh")
 
         z_mesh: ZMesh = self.bed_mesh.get_mesh()
-        z_mesh.print_mesh(logging.info)
+        z_mesh.print_mesh(self.gcode.respond_info)
 
 
 def load_config(config):
