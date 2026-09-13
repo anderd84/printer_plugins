@@ -28,8 +28,9 @@ class ScrewsTiltAdjustMesh:
                                     desc=self.cmd_STAM__PROCESS_MESH_help)
 
     def get_z_mesh(self, profile_name: str) -> ZMesh:
-        self.gcode.run_script_from_command("BED_MESH_PROFILE LOAD={profile_name}")
+        self.gcode.run_script_from_command(f"BED_MESH_PROFILE LOAD={profile_name}")
         z_mesh: ZMesh = self.bed_mesh.get_mesh()
+        return z_mesh
 
     def process_mesh(self, z_mesh: ZMesh) -> None:
         z_mesh.print_mesh(self.gcode.respond_info)
