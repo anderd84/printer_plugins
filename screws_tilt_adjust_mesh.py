@@ -10,9 +10,9 @@ class ScrewsTiltAdjustMesh:
     test : str
 
     def __init__(self, config):
-        logging.debug("LOADING STAM plugin")
+        logging.info("LOADING STAM plugin")
         self.printer = config.get_printer()
-        self.test = config.get("test")
+        self.test = config.get("test_val")
         self.gcode = self.printer.lookup_object('gcode')
         self.gcode.register_command("SCREWS_TILT_ADJUST_MESH",
                                     self.cmd_SCREWS_TILT_ADJUST_MESH,
