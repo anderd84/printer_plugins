@@ -81,7 +81,7 @@ class ScrewsTiltAdjustMesh:
         output_list = [None] * 3
 
         for i, screw in enumerate(self.screws_tilt_adjust.screws):
-            coords: tuple[2] = screw.screw_coords
+            coords: tuple[2] = screw.screw_coord
             output_list[i].bed_x = coords[0]
             output_list[i].bed_y = coords[1]
             output_list[i].bed_z = plane_coeffs[0]*coords[0] + \
