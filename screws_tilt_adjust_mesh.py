@@ -104,6 +104,7 @@ class ScrewsTiltAdjustMesh:
         plane = self.calculate_regression_plane(z_mesh)
         screw_coords = self.calculate_screw_coords(plane)
 
+        self.screws_tilt_adjust.direction = None
         self.screws_tilt_adjust.probe_finalize(screw_coords)
 
 
@@ -117,6 +118,7 @@ class ScrewsTiltAdjustMesh:
         plane = self.calculate_regression_plane(z_mesh)
         screw_coords = self.calculate_screw_coords(plane)
 
+        self.screws_tilt_adjust.direction = None
         self.screws_tilt_adjust.probe_finalize(screw_coords)
 
 
