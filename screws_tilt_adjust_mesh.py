@@ -32,7 +32,7 @@ class ScrewsTiltAdjustMesh:
         z_mesh: ZMesh = self.bed_mesh.get_mesh()
         return z_mesh
 
-    def process_mesh(self, z_mesh: ZMesh) -> None:
+    def calculate_regression_plane(self, z_mesh: ZMesh) -> tuple[3]:
         z_mesh.print_mesh(self.gcode.respond_info)
         meshed_mat = z_mesh.get_mesh_matrix()
 
@@ -57,9 +57,9 @@ class ScrewsTiltAdjustMesh:
                 xz_sum += x_coord * z_coord
                 yz_sum += y_coord * z_coord
                 xy_sum += x_coord * y_coord
-                x_sum += x_coord
-                y_sum += y_coord
-                z_sum += z_coord
+                x_sum  += x_coord
+                y_sum  += y_coord
+                z_sum  += z_coord
                 n += 1
 
         x2_regSum = x2_sum - (x_sum*x_sum/n)
@@ -73,7 +73,22 @@ class ScrewsTiltAdjustMesh:
         ky = (x2_regSum*yz_regSum - xy_regSum*xz_regSum)/denom
 
         b = (z_sum - kx*x_sum - ky*y_sum)/n
-        self.gcode.respond_info(f"plane is approx: z = {kx}*x + {ky}*y + {b}")
+        self.gcode.respond_info(f"plane is approx: 0 = {kx}*x + {ky}*y - 1.0*z + {b}")
+
+        return(kx, ky, b)
+
+    def calculate_screw_coords(self, plane_coeffs: tuple[3]) -> list[3]:
+        output_list = [None] * 3
+
+        for i, screw in enumerate(self.screws_tilt_adjust.screws):
+            coords: tuple[2] = screw.screw_coords
+            output_list[i].bed_x = coords[0]
+            output_list[i].bed_y = coords[1]
+            output_list[i].bed_z = plane_coeffs[0]*coords[0] + \
+                                   plane_coeffs[1]*coords[1] + \
+                                   plane_coeffs[2]
+            
+        return output_list
 
 # ==========================================================================================
     cmd_SCREWS_TILT_ADJUST_MESH_help = "Tool to help adjust bed leveling " \
@@ -84,17 +99,23 @@ class ScrewsTiltAdjustMesh:
 
         self.gcode.run_script_from_command("BED_MESH_CALIBRATE PROFILE=STAM_mesh")
         z_mesh = self.get_z_mesh("STAM_mesh")
-        self.process_mesh(z_mesh)
+        plane = self.calculate_regression_plane(z_mesh)
+        screw_coords = self.calculate_screw_coords(plane)
+
+        self.screws_tilt_adjust.probe_finalize(screw_coords)
 
 
-    cmd_STAM__PROCESS_MESH_help = "TODO"
+    cmd_STAM__PROCESS_MESH_help = "Determine leveling from pre-existing bed mesh"
     def cmd_STAM__PROCESS_MESH(self, gcmd):
         profile = gcmd.get('PROFILE', "STAM_mesh")
         self.gcode.respond_info(f"LOADING : {profile}")
         z_mesh = self.get_z_mesh(profile)
         if z_mesh is None:
             self.gcode.error("bad mesh read")
-        self.process_mesh(z_mesh)
+        plane = self.calculate_regression_plane(z_mesh)
+        screw_coords = self.calculate_screw_coords(plane)
+
+        self.screws_tilt_adjust.probe_finalize(screw_coords)
 
 
 
