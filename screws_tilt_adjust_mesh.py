@@ -87,7 +87,7 @@ class ScrewsTiltAdjustMesh:
             output_list[i].bed_z = plane_coeffs[0]*coords[0] + \
                                    plane_coeffs[1]*coords[1] + \
                                    plane_coeffs[2]
-            
+            self.gcode.respond_info(f"screw {i + 1} at ({output_list[i].bed_x}, {output_list[i].bed_y}, {output_list[i].bed_z})")
         return output_list
 
 # ==========================================================================================
