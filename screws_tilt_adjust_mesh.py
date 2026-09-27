@@ -1,5 +1,6 @@
 from extras.bed_mesh import BedMesh, ZMesh
 from extras.screws_tilt_adjust import ScrewsTiltAdjust
+from extras.manual_probe import ProbeResult
 from gcode import GCodeDispatch
 import logging
 
@@ -78,10 +79,11 @@ class ScrewsTiltAdjustMesh:
         return(kx, ky, b)
 
     def calculate_screw_coords(self, plane_coeffs: tuple[3]) -> list[3]:
-        output_list = [None] * 3
+        output_list = [ProbeResult] * 3
 
         for i, screw in enumerate(self.screws_tilt_adjust.screws):
             coords: tuple[2] = screw[0]
+            output_list[i].bed_x = ProbeResult()
             output_list[i].bed_x = coords[0]
             output_list[i].bed_y = coords[1]
             output_list[i].bed_z = plane_coeffs[0]*coords[0] + \
