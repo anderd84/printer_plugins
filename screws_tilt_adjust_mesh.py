@@ -83,12 +83,12 @@ class ScrewsTiltAdjustMesh:
 
         for i, screw in enumerate(self.screws_tilt_adjust.screws):
             coords: tuple[2] = screw[0]
-            output_list[i].bed_x = ProbeResult()
-            output_list[i].bed_x = coords[0]
-            output_list[i].bed_y = coords[1]
-            output_list[i].bed_z = plane_coeffs[0]*coords[0] + \
-                                   plane_coeffs[1]*coords[1] + \
-                                   plane_coeffs[2]
+            bed_x = coords[0]
+            bed_y = coords[1]
+            bed_z = plane_coeffs[0]*coords[0] + \
+                    plane_coeffs[1]*coords[1] + \
+                    plane_coeffs[2]
+            output_list[i] = ProbeResult(bed_x=bed_x, bed_y=bed_y, bed_z=bed_z, test_x=bed_x, test_y=bed_y, test_z=0)
             self.gcode.respond_info(f"screw {i + 1} at ({output_list[i].bed_x}, {output_list[i].bed_y}, {output_list[i].bed_z})")
         return output_list
 
